@@ -1,7 +1,7 @@
 # PM-II_EJ2017
-¡Bienvenido! al repositorio oficial de la materia Programación Móvil II en el periodo Enero-Junio 2017 para Ingeniería en Sistemas Computacionales
+¡Bienvenido! al repositorio oficial de la materia Programación Móvil II en el periodo Enero-Junio 2017 para Ingeniería en Sistemas Computacionales del Instituto Tecnológico Superior del Sur de Guanajuato del Tecnológico Nacional de México [ITSUR](http://www.itsur.edu.mx)
 
-Este repositorio es el principal espacio de entrega de proyectos para la clase impartida por el Prof. Fernando José Martínez López del Instituto Tecnológico Superior del Sur de Guanajuato del Tecnológico Nacional de México.
+Este repositorio es el principal espacio de entrega de tareas y proyectos para la clase impartida por el Prof. Fernando José Martínez López.
 
 Los alumnos utilizarán este espacio para enviar sus tareas y proyectos.
 
