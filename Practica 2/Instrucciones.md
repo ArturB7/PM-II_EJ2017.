@@ -3,7 +3,7 @@
 El propósito de esta practica es que el alumno pueda crear su propio Content Provider a partir de una aplicación básica con persistencia en base de datos.
 
 ##Instrucciones:
-Hacer fork del código fuente y modificarlo para:
+Hacer fork de la carpeta Students_ContenProviderFoundation que contiene el código fuente base y modificarlo para:
 
  1. Crear clase Contract
  2. Crear clase ContentProvider
