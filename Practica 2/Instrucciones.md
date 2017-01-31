@@ -10,3 +10,5 @@ Hacer fork del código fuente y modificarlo para:
  3. Registrar Content Provider en Manifest
  4. Utilizar el Content Provider en lugar de acceder directamente a la BD en la app
  5. (opcional) Utilizar el content provider desde otra aplicación.
+
+Mas instrucciones próximamente...
