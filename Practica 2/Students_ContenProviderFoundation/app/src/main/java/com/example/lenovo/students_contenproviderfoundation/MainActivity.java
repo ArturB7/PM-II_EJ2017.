@@ -135,14 +135,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showMessage("Error", "No hay registros");
                 return;
             }
-            StringBuilder buffer=new StringBuilder();
+            StringBuilder builder=new StringBuilder();
             while(c.moveToNext())
             {
-                buffer.append("No.Control: "+c.getString(0)+"\n");
-                buffer.append("Nombre: "+c.getString(1)+"\n");
-                buffer.append("Puntos: "+c.getString(2)+"\n\n");
+                builder.append("No.Control: ")
+                        .append(c.getString(0))
+                        .append("\n");
+                builder.append("Nombre: ")
+                        .append(c.getString(1))
+                        .append("\n");
+                builder.append("Puntos: ")
+                        .append(c.getString(2))
+                        .append("\n\n");
             }
-            showMessage("Detalles del estudiante", buffer.toString());
+            showMessage("Detalles del estudiante", builder.toString());
             c.close();
         }
         if(view== mShowInfoButton)
