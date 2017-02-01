@@ -190,6 +190,164 @@ public class StudentsContentProvider extends ContentProvider {
         return true;
     }
 
+    /**
+     * El método QUERY se hace cargo de las peticiones query de los clientes. Se utilizará este método para 
+     * hacer query de todos los estudiantes así como de algun estudiante con ID particular (número de control)
+     * correspondiente a las URIs definidas para este propósito.
+     *
+     * @param uri           La URI para hacer query
+     * @param projection    La lista de columnas que se colocarán en el cursor. Si es null, todas las columnas son incluidas.
+     * @param selection     Criterio de selección para filtrar registros. Si es null, todos los registros son incluidos. 
+     * @param selectionArgs Puedes incluir ?s en el selection, y serán remplazado por los valores en selectionArgs en el órden de aparición.
+     * @param sortOrder     Como los registros del cursor deberían ser ordenados.
+     * @return Un Cursorque contiene el resultado del query.
+     */
+    @Override
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection,
+                        String[] selectionArgs, String sortOrder) {
 
+        Cursor cursor;
+
+        /*
+         * Mediante este switch, dada una URI, se determina el tipo de petición que el query esta haciendo.
+         */
+        switch (sUriMatcher.match(uri)) {
+            /*
+             * Cuando el metodo match del sUriMatcher es invocado con una URI que luce así:
+             *
+             *      content://com.example.lenovo.students_contenproviderfoundation/students/147221
+             *
+             * el metodo match del sUriMatcher devolverá el código CODE_STUDENTS_WITH_ID que indica 
+             * que debemos devolver el estudiante con el ID señalado al final de la URI.
+             * En este caso particular el cursor devolberá únicamente un solo registro correspondiente
+             * al estudiante con tal ID.
+             */
+            case CODE_STUDENTS_WITH_ID: {
+                /*
+                 * Para determinar el ID en el URI, se debe buscar el segmento final del path
+                 * En el comentario de arriba el último segmento del path es 147221 y representa
+                 * el número de control del estudiante.
+                 */
+                String numControl = uri.getLastPathSegment();
+
+                /*
+                 * El método query acepta un arreglo de string de argumentos, se aprovechará esta
+                 * característica para agregar un argumento que permita realizar el filtrado.
+                 */
+                String[] selectionArguments = new String[]{numControl};
+
+                cursor = db.query(
+                        /* Tabla que vamos a consultar */
+                        StudentsContract.StudentEntry.TABLE_NAME,
+                        /*
+                         * Una projection que designa las columnas que queremos devolver en el Cursor.
+                         * Si es null devuelve todas las columnas, aunque es buena práctica indicar 
+                         * cuales son aquellas que realmente necesitamos.
+                         */
+                        projection,
+                        /*
+                         * Para especificar el registro que queremos filtrar en el cursor utilizamos
+                         * un signo de interrogación que será remplazado por el valor indicado en 
+                         * selectionArguments, estos argumentos son insertados en la sentencia SQL 
+                         * por SQLite tras bambalinas.
+                         */
+                        StudentsContract.StudentEntry.COLUMN_ID + " = ? ",
+                        selectionArguments,
+                        null,
+                        null,
+                        sortOrder);
+
+                break;
+            }
+
+            /*
+             * Cuando el método match del sUriMatcher sea invocado con una URI que luzca EXACTAMENTE como esta
+             *
+             *      content://com.example.lenovo.students_contenproviderfoundation/students/
+             *
+             * El método match del sUriMatcher devolverá el código CODE_STUDENTS que indica que debemos
+             * devolver un cursor con todos los estudiantes en nuestra tabla de students.
+             *
+             */
+            case CODE_STUDENTS: {
+                cursor = db.query(
+                        StudentsContract.StudentEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            }
+
+            default:
+                throw new UnsupportedOperationException("URI desconocida: " + uri);
+        }
+
+        //Call setNotificationUri on the cursor and then return the cursor
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
+    }
+
+
+    /**
+     * Elimina los datos dada una URI con argumentos opcionales para precisar el borrado selectivo.
+     *
+     * @param uri           El URI a alterar.
+     * @param selection     Restricciones opcionales para aplicar durante el borrado de registros.
+     * @param selectionArgs Utilizada en conjunto con la sentencia selection.
+     * @return La cantidad de registros eliminados
+     */
+    @Override
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+        throw new RuntimeException("You need to implement this method!");
+    }
+
+    /**
+     * En esta app, no se utiliza este método.
+     * Normalmente, este método maneja peticiones para conocer el MIME type
+     * de los datos en una URI específica.  Por ejemplo si nuestra app provee imagenes
+     * en una URI particular entonces deberíamos devolver image URI desde este metodo.
+     *
+     * @param uri El URI a consultar.
+     * @return nada en esta app, pero normalmente una cadena MIME type, o null si no hay MIME type.
+     */
+    @Override
+    public String getType(@NonNull Uri uri) {
+        throw new RuntimeException("We are not implementing getType in this app.");
+    }
+
+    /**
+     * Método Insert en este ContentProvider.
+     *
+     * @param uri    El URI para la petición de Insert.
+     * @param values Un conjunto de pares column_name/value para agregar en la base de datos.
+     * @return nada en esta app, pero normalmente el URI del nuevo item insertado.
+     */
+    @Override
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
+        throw new RuntimeException(
+                "You need to implement this method.");
+    }
+
+    @Override
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        throw new RuntimeException("You need to implement this method.");
+    }
+
+    /**
+     * Este método no necesita ser invocado. Esta diseñado para asistir a 
+     * los frameworks de testing. Puedes aprender mas en:
+     * http://developer.android.com/reference/android/content/ContentProvider.html#shutdown()
+     */
+    @Override
+    @TargetApi(11)
+    public void shutdown() {
+        db.close();
+        super.shutdown();
+    }
+
+}
 
 ```
