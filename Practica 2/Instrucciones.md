@@ -84,3 +84,112 @@ public class StudentsContract {
 
 ##2. Crear clase ContentProvider
 
+De  manera semejante al paso anterior, se debe crear una clase denominada **StudentsContentProvider** en el nuevo paquete anteriormente creado denominado **data** dentro del paquete principal **com.example.lenovo.students_contenproviderfoundation**.  El código a agregar es mas o menos el siguiente:
+
+```java
+package com.example.lenovo.students_contenproviderfoundation.data;
+
+import android.annotation.TargetApi;
+import android.content.ContentProvider;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+
+public class StudentsContentProvider extends ContentProvider {
+
+    /* Estas constantes enteras sirven para identificar las URIs que este ContentProvider puede manejar
+     * Estas serán utilizadas para hacer match de las URIs con los datos que corresponden. Se tomará
+     * ventaja de la clase UriMatcher para hacer el proceso de matching mucho mas sencillo en lugar de hacerlo
+     * a mano mediante expresiones regulares.  Es importante como desarrollador no volver a inventar la rueda
+     * el UriMatcher ya hace bien el trabajo que te ahorrará invertir esfuerzos en expresiones regulares. 
+     */
+    public static final int CODE_STUDENTS = 100;
+    public static final int CODE_STUDENTS_WITH_ID = 101;
+
+    /*
+     * El URI Matcher utilizado por este content provider. La "s" al inicio del nombre de la variable
+     * significa que este UriMatcher es un miembro estatico y es una convención común de google para Android.
+     */
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+
+    /*
+     * Esta variable permitirá mantener el acceso a la base de datos de la aplicación cuando así 
+     * sea requerido al momento de trabajar con los datos.
+     */
+    private SQLiteDatabase db;
+
+    /**
+     * Crea el UriMatcher que hará match para cada URI correspondiente a las constantes CODE_STUDENTS 
+     * y CODE_STUDENTS_WITH_ID definidas arriba.
+     *
+     * @return Un UriMatcher que hace match correctamente con las constantes CODE_STUDENTS y CODE_STUDENTS_WITH_ID
+     */
+    public static UriMatcher buildUriMatcher() {
+
+        /*
+         * Todos los paths agregados a el UriMatcher tienen un codigo de retorno cuando el match ocurre.
+         * El código que es pasado al constructor del UriMatcher aquí representa el código de retorno 
+         *para la URI raíz.  Es común utilizar NO_MATCH como el código para este caso.
+         */
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = StudentsContract.CONTENT_AUTHORITY;
+
+        /*
+         * Para cada URI se requiere crear el codigo correspondiente. Preferentemente estos son
+         * campos constantes en la clase, así que puedes utilizarlos a lo ancho y largo de la clase
+         * y estos no cambiarán. En este ejemplo, se utilizan solamente CODE_STUDENTS y CODE_STUDENTS_WITH_ID.
+         */
+         
+        /* Aquí se agrega la URI fija para consultar todos los estudiantes que es:
+         * content://com.example.lenovo.students_contenproviderfoundation/students/
+         * esto le indica al UriMatcher que si se envía ese path el matcher debe 
+         * devolver el código correspondiente a CODE_STUDENTS
+         */
+        matcher.addURI(authority, StudentsContract.PATH_STUDENTS, CODE_STUDENTS);
+
+        /*
+         * Acá se agrega la URI que permite consultar un estudiante en particular por su ID y
+         * que podría lucir algo así como:
+         * content://com.example.lenovo.students_contenproviderfoundation/students/147221
+         * Donde el "/#" indica al UriMatcher que si al PATH_STUDENTS le sigue CUALQUIER numero,
+         * debería devolver el código de: CODE_STUDENTS_WITH_ID
+         */
+        matcher.addURI(authority, StudentsContract.PATH_STUDENTS + "/#", CODE_STUDENTS_WITH_ID);
+
+        return matcher;
+    }
+
+    /**
+     * En el método onCreate, se inicializa nuestro content provider. Este metodo es invocado para 
+     * todos los content providers registrados en el hilo principal de la aplicación una vez que 
+     * la aplicación es lanzada, por lo que no debería desempeñar operaciones largas o que puedan
+     * retrasen el inicio de la aplicación.
+     *
+     * Inicializaciones no triviales (como actualizar o escanear
+     * de bases de datos) deberían esperar hasta que el content provider sea utilizado.
+     *
+     * Una inicialización diferida mantendrá el inicio de la aplicación rápido y evitará 
+     * trabajo innecesario si el content provider no es utilizado, o  la base de datos arroja un
+     * un error tal como disco lleno evitando que la aplicación se inicie adecuadamente.
+     *
+     * @return true si el proveedor ha sido exitosamente cargado, false si no
+     */
+    @Override
+    public boolean onCreate() {
+        /*
+         * Como se comentó anteriormente onCreate is ejecutado en el hilo principal, y
+         * se deben evitanr operaciones que puedan causar un lag en nuestra app. El constructir de SQLITE 
+         * es muy liviano y podemos colocar su inicialización aquí.
+         */
+        db = getContext().openOrCreateDatabase("StudentDB", Context.MODE_PRIVATE, null);
+
+        return true;
+    }
+
+
+
+```
