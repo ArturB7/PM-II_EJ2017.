@@ -351,3 +351,45 @@ public class StudentsContentProvider extends ContentProvider {
 }
 
 ```
+##3. Registrar Content Provider en el Manifest
+Para que el content provider sea valido debe registrarse en el archivo manifest agregando unas líneas mas o menos como las que siguen:
+
+```xml
+...
+        <provider
+            android:name=".data.StudentsContentProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"/>
+    </application>
+...
+```
+
+##4.Utilizar el Content Provider en lugar de acceder directamente a la BD en la app
+Para probar rápidamente el funcionamiento del conten provider sin tener que crear una aplicacion adicional, la **MainActivity** de nuestra App actual puede ser modificado de manera que no utilice directamente SQLITE sino que realice las operaciones mediante el content provider, al menos las correspondientes a VIEW y VIEW ALL.  Para lograr esto se deberá modificar el código de la clase **MainActivity** mas o menos así:
+
+Para el caso: if(view== mViewButton)
+```java
+    ...
+    //Cursor c=db.rawQuery("SELECT * FROM student WHERE num_control='"+ mNoControlEditText.getText()+"'", null);
+    ContentResolver resolver = getContentResolver();
+
+    Cursor c = resolver.query(
+    StudentsContract.StudentEntry.buildStudentsUriWithId(mNoControlEditText.getText().toString()),null,null,null,null);
+    ...
+```
+
+Para el caso: if(view== mViewAllButton)
+```java
+    ...
+    //Cursor c=db.rawQuery("SELECT * FROM student", null);
+
+    ContentResolver resolver = getContentResolver();
+    Cursor c = resolver.query(StudentsContract.StudentEntry.CONTENT_URI,null,null,null,null);
+    ...
+```
+
+##(opcional) Utilizar el content provider desde otra aplicación.
+
+Opcionalmente y por algunos puntos extras de aprendizaje podría crear una aplicación externa y utilizar nuestro nuevo content provider para hacer uso de los datos.
+
+Eso es todo amigos.
