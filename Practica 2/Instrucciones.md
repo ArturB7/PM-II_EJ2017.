@@ -358,7 +358,7 @@ Para que el content provider sea valido debe registrarse en el archivo manifest 
 ...
         <provider
             android:name=".data.StudentsContentProvider"
-            android:authorities="@string/content_authority"
+            android:authorities="com.example.lenovo.students_contenproviderfoundation"
             android:exported="false"/>
     </application>
 ...
