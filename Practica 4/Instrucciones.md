@@ -1,4 +1,4 @@
-#Descripción de la práctica
+#Descripción de la práctica 4
 
 El propósito de esta practica es que el alumno pueda crear un Job Service que sea capaz de lanzar periodicamente una notificación cuando el dispositivo se encuentre cargando. 
 
@@ -7,10 +7,12 @@ El propósito de esta practica es que el alumno pueda crear un Job Service que s
 ##Instrucciones:
 Obtener el código fuente base y modificarlo para:
 
+Fase 1: Notificaciones
  1. Crear clase NotificationUtils 
  2. Modificar Manifiesto 
- 3. Registrar 
- 4. Utilizar 
+
+Fase 2:
+ 3. 
 
 A continuación algo de código y su explicación para cada paso de la práctica:
 
@@ -127,7 +129,7 @@ a) Agregar el permiso para vibrar
     <uses-permission android:name="android.permission.VIBRATE" />
 ...
 ```
-b) Agregar el atributo launcMode a "single top" sobre la MainActivity para que cuando esta sea abierta utilizando una notificación no sea generada una nueva sino que se abra la existente.
+b) Agregar el atributo launchMode a "singleTop" sobre la MainActivity para que cuando esta sea abierta utilizando una notificación no sea generada una nueva sino que se abra la existente.
 ```xml
 ...
         <activity
@@ -138,6 +140,36 @@ b) Agregar el atributo launcMode a "single top" sobre la MainActivity para que c
 ```
 
 
+Hasta este momento ya deberías ser capaz de lanzar una notificación, si deseas probar el código puedes agregar un boton en el layout que dispare el lanzamiento de una notificación.  Hacer esto es opcional, pero si quieres probar hasta este momento el código puedes modificar lo siguiente:
+
+a) al final del archivo del layout **activity_main.xml** agrega un botón que responda al onClick de la siguiente manera:
+```xml
+    ...
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="testNotification"
+        android:text="Probar Notificación" />
+
+</LinearLayout>
+```
+
+b) En algun lugar dentro de la clase de **MainActivity** agrega el método **testNotification** correspondiente de la siguiente forma:
+``` java
+    ...
+    
+    public void testNotification(View view) {
+        NotificationUtils.remindUserBecauseCharging(this);
+    }
+    
+    ...
+```
+
+Ejecuta tu aplicación y prueba haciendo clic en el botón "Probar Notificación".  Si ya probaste no olvides remover este botón del layout y el método testNotification de la MainActivity antes de proceder con lo siguiente.
+
 ##3. Registrar el Service en el Manifest
 Para que el Service sea valido debe registrarse en el archivo manifest agregando unas líneas mas o menos como las que siguen:
 
@@ -147,11 +179,25 @@ Para que el Service sea valido debe registrarse en el archivo manifest agregando
 ...
 ```
 
-##4.Utilizar el Service para mandar persistir los datos de manera asincrona
-Para probar rápidamente el funcionamiento del nuevo service y lograr que se mande escribir hacia SharedPreferences de manera asincrona como ya se tiene programado,  habrá que modificar la **MainActivity** de nuestra App actual.  Para lograr esto se deberá modificar el código de esta clase **MainActivity** mas o menos así:
+##4. Registrar el Service en el Manifest
+Para que el Service sea valido debe registrarse en el archivo manifest agregando unas líneas mas o menos como las que siguen:
 
-```java
+```xml
+...
 
+...
 ```
+
+##5. Registrar el Service en el Manifest
+Para que el Service sea valido debe registrarse en el archivo manifest agregando unas líneas mas o menos como las que siguen:
+
+```xml
+...
+
+...
+```
+
+
+
 
 Eso es todo amigos.
