@@ -12,7 +12,8 @@ Fase 1: Notificaciones
  2. Modificar Manifiesto 
 
 Fase 2:
- 3. 
+ 3. Actualizar el código de la clase ReminderTasks
+ 4. Actualizar el código de la clase NotificationUtils
 
 A continuación algo de código y su explicación para cada paso de la práctica:
 
@@ -198,8 +199,8 @@ public class ReminderTasks {
 }
 ```
 
-##4. Actualizar la clase NotificationUtils
-Realizar los siguientes cambios a la clase NotificationUtils:
+##4. Actualizar el código de la clase NotificationUtils
+Realizar los siguientes 5 cambios a la clase NotificationUtils:
 
 ```java
 ...
@@ -243,7 +244,6 @@ public class NotificationUtils {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        /* WATER_REMINDER_NOTIFICATION_ID allows you to update or cancel the notification later on */
         notificationManager.notify(WATER_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
     }
     
@@ -281,7 +281,7 @@ public class NotificationUtils {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         // crea una Action para que el usuario nos indique que ha tomado un vaso de agua...
         Action drinkWaterAction = new Action(R.drawable.ic_local_drink_black_24px,
-                "Ya lo hice!",
+                "Ya tome!",
                 incrementWaterPendingIntent);
         // devuelve tal accion.
         return drinkWaterAction;
