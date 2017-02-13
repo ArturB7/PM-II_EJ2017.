@@ -8,7 +8,7 @@ El propósito de esta practica es que el alumno pueda crear un Job Service que s
 Obtener el código fuente base y modificarlo para:
 
  1. Crear clase NotificationUtils 
- 2. Crear clase 
+ 2. Modificar Manifiesto 
  3. Registrar 
  4. Utilizar 
 
@@ -117,13 +117,27 @@ public class NotificationUtils {
 }
 ```
 
-##2. Crear clase WaterReminderIntentService
+##2. Modificar Manifiesto
 
-De manera semejante al paso anterior, se debe crear una clase denominada **WaterReminderIntentService** en el nuevo paquete anteriormente creado denominado **sync**.  El código a agregar en esta nueva clase es mas o menos el siguiente:
+Actualizar el manifiesto agregando lo siguiente:
 
-```java
-
+a) Agregar el permiso para vibrar
+```xml
+...
+    <uses-permission android:name="android.permission.VIBRATE" />
+...
 ```
+b) Agregar el atributo launcMode a "single top" sobre la MainActivity para que cuando esta sea abierta utilizando una notificación no sea generada una nueva sino que se abra la existente.
+```xml
+...
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            ...
+```
+
+
 ##3. Registrar el Service en el Manifest
 Para que el Service sea valido debe registrarse en el archivo manifest agregando unas líneas mas o menos como las que siguen:
 
