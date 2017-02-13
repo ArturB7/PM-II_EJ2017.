@@ -13,12 +13,6 @@ Fase 2: Agregar acciones específicas a las Notificaciones
  3. Actualizar el código de la clase ReminderTasks
  4. Actualizar el código de la clase NotificationUtils
 
-Fase 3: Implementar un Job Service que se haga cargo de las cosas
- 5. Ac
- 6. Ac
-
-
-
 A continuación algo de código y su explicación para cada paso de la práctica:
 
 ##1. Crear clase NotificationUtils. 
