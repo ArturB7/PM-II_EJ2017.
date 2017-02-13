@@ -7,13 +7,19 @@ El propósito de esta practica es que el alumno pueda crear un Job Service que s
 ##Instrucciones:
 Obtener el código fuente base y modificarlo para:
 
-Fase 1: Notificaciones
+Fase 1: Preparar el entorno para lanzar Notificaciones
  1. Crear clase NotificationUtils 
  2. Modificar Manifiesto 
 
-Fase 2:
+Fase 2: Agregar acciones específicas a las Notificaciones
  3. Actualizar el código de la clase ReminderTasks
  4. Actualizar el código de la clase NotificationUtils
+
+Fase 3: Implementar un Job Service que se haga cargo de las cosas
+ 5. Ac
+ 6. Ac
+
+
 
 A continuación algo de código y su explicación para cada paso de la práctica:
 
@@ -179,7 +185,7 @@ Realizar los siguientes 3 cambios a la clase ReminderTask:
 public class ReminderTasks {
 
     public static final String ACTION_INCREMENT_WATER_COUNT = "increment-water-count";
-    // 1. Agregar una constante publicadenominada ACTION_DISMISS_NOTIFICATION que será utilizada para indicar que el usuario hizo caso omiso de la notificación
+    // 1. Agregar una constante publica denominada ACTION_DISMISS_NOTIFICATION que será utilizada para indicar que el usuario hizo caso omiso de la notificación
     public static final String ACTION_DISMISS_NOTIFICATION = "dismiss-notification";
 
     public static void executeTask(Context context, String action) {
@@ -188,32 +194,36 @@ public class ReminderTasks {
         } else if (ACTION_DISMISS_NOTIFICATION.equals(action)) {
             NotificationUtils.clearAllNotifications(context);
         }
-        // 2. Agregar un else para quitar la notificacón cuando el usuario ignore el recordatorio.
+        // 2. Agregar un else para quitar la notificacón cuando el usuario ignore el recordatorio, 
+        //    el método clearAllNotifications será creado en la clase NotificationUtils a continuación
     }
 
     private static void incrementWaterCount(Context context) {
         PreferenceUtilities.incrementWaterCount(context);
-        // 3. Agregar que si el contador fue incrementado se quite cualquier notificación, el método clearAllNotifications será creado en la clase NotificationUtils a continuación
+        // 3. Agregar que si el contador fue incrementado se quite cualquier notificación
         NotificationUtils.clearAllNotifications(context);
     }
 }
 ```
 
 ##4. Actualizar el código de la clase NotificationUtils
-Realizar los siguientes 5 cambios a la clase NotificationUtils:
+Realizar los siguientes 6 cambios a la clase NotificationUtils:
 
 ```java
+...
+//1. Agregar específicamente el siguiente import, pues existe un gran riesgo de confusión sobre que tipo de Action utilizar: 
+import android.support.v4.app.NotificationCompat.Action;
 ...
 public class NotificationUtils {
 
     private static final int WATER_REMINDER_NOTIFICATION_ID = 1138;
     private static final int WATER_REMINDER_PENDING_INTENT_ID = 3417;
     
-    // 1. Agregar estas nuevas constantes para identificar los intents cuando el usuario atienda la notificación y cuando la ignore.
+    // 2. Agregar estas nuevas constantes para identificar los intents cuando el usuario atienda la notificación y cuando la ignore.
     private static final int ACTION_DRINK_PENDING_INTENT_ID = 1;
     private static final int ACTION_IGNORE_PENDING_INTENT_ID = 14;
 
-    // 2. Crear el método al que se refería el paso anterior para quitar todas las notificaciones
+    // 3. Crear el método al que se refería el paso anterior para quitar todas las notificaciones
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -232,7 +242,7 @@ public class NotificationUtils {
                         context.getString(R.string.charging_reminder_notification_body)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
-                // 3. Agregar este par de nuevas acciones a la notificación indicando sus métodos correspondientes
+                // 4. Agregar este par de nuevas acciones a la notificación indicando sus métodos correspondientes
                 .addAction(drinkWaterAction(context))
                 .addAction(ignoreReminderAction(context))
                 .setAutoCancel(true);
@@ -247,7 +257,7 @@ public class NotificationUtils {
         notificationManager.notify(WATER_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
     }
     
-    // 4. Agregar un método estático denominado ignoreReminderAction que...
+    // 5. Agregar un método estático denominado ignoreReminderAction que...
     private static Action ignoreReminderAction(Context context) {
         // crea un Intent para lanzar el WaterReminderIntentService...
         Intent ignoreReminderIntent = new Intent(context, WaterReminderIntentService.class);
@@ -267,7 +277,7 @@ public class NotificationUtils {
         return ignoreReminderAction;
     }
 
-    // 5. Agregar un método estatico denominado drinkWaterAction que...
+    // 6. Agregar un método estatico denominado drinkWaterAction que...
     private static Action drinkWaterAction(Context context) {
         // crea un Intent para lanzar el WaterReminderIntentService
         Intent incrementWaterCountIntent = new Intent(context, WaterReminderIntentService.class);
@@ -303,6 +313,8 @@ public class NotificationUtils {
     }
 }
 ```
+
+Si anteriormente habías agregado el botón para realizar pruebas en este momento **ya deberías ser capaz de lanzar una notificación con un par de acciones**, si ya tomaste agua puedes indicarle que ya lo hiciste y esto incrementará el contador, si deseas omitir la notificación esta es la segunda acción.  Si aún no haz agregado el botón para probar y deseas ver el código en acción (esto es opcional otra vez) puedes agregar el botón en el layout que dispara el lanzamiento de nuestra notificación como se había mencionado anteriormente. 
 
 ##5. ...
 descripcion:
