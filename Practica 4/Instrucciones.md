@@ -316,7 +316,24 @@ public class NotificationUtils {
 
 Si anteriormente habías agregado el botón para realizar pruebas en este momento **ya deberías ser capaz de lanzar una notificación con un par de acciones**, si ya tomaste agua puedes indicarle que ya lo hiciste y esto incrementará el contador, si deseas omitir la notificación esta es la segunda acción.  Si aún no haz agregado el botón para probar y deseas ver el código en acción (esto es opcional otra vez) puedes agregar el botón en el layout que dispara el lanzamiento de nuestra notificación como se había mencionado anteriormente. 
 
-##5. ...
+Ahora finalmente viene la parte interesante sobre el Job Service...
+
+##5. Incluir una dependencia hacia el Firebase Job Dispatcher
+Para crear nuestro Service Job es necesario utilizar un Job Scheduler.  Existen dos enfoques para crear un Job Scheduler, el enfoque normal que utiliza una clase JobScheduler tal cual o el enfoque sugerido por Google que utiliza la clase FireBaseJobDispatcher. La ventaja de FireBaseJobDispatcher es que ofrece soporte de compatibilidad hasta el API 9 a diferencia del JobScheduler que solo ofrece hasta el API 21. El único prerequisito para utilizar el FireBaseJobDispatcher es que tengas Google Play Services en tu dispositivo con al menos el API 9 (Gingerbread).  Puedes aprender mas sobre esto en la documentación de [FireBaseJobDispatcher](https://github.com/firebase/firebase-jobdispatcher-android). 
+
+Para lograr esto hay que agregar la dependencia en el archivo build.gradle (Module:app)
+
+```xml
+...
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    // Dependencia de Gradle para el Firebase Job Dispatcher
+    compile 'com.firebase:firebase-jobdispatcher:0.5.0'
+}
+...
+```
+##6. ...
 descripcion:
 
 ```xml
@@ -325,6 +342,46 @@ descripcion:
 ...
 ```
 
+##7. ...
+descripcion:
+
+```xml
+...
+
+...
+```
+##8. ...
+descripcion:
+
+```xml
+...
+
+...
+```
+##9. ...
+descripcion:
+
+```xml
+...
+
+...
+```
+##10. ...
+descripcion:
+
+```xml
+...
+
+...
+```
+##11. ...
+descripcion:
+
+```xml
+...
+
+...
+```
 
 
 Eso es todo amigos.
