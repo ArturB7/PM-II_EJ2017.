@@ -1,4 +1,5 @@
-#Descripción de la práctica 4 **Tema de interés: Uso de Notificaciones**
+#Descripción de la práctica 4 
+**Tema de interés: Uso de Notificaciones**
 
 El propósito de esta practica es complementar la práctica 3 para que el alumno pueda lanzar notificaciones rumbo a la construcción de un Job Service que sea capaz de lanzar periodicamente estas notificación cuando el dispositivo se encuentre cargando bajo ciertas condiciones de funcionamiento. 
 

@@ -1,4 +1,5 @@
-#Descripción de la práctica 6 **Tema de interés: Uso de BroadcastReceivers**
+#Descripción de la práctica 6 
+**Tema de interés: Uso de BroadcastReceivers**
 
 El propósito de esta practica es que el alumno pueda conocer y aplicar el concepto de **Broadcast Receiver** el único componente de Android que faltaba por abordar. Puedes encontrar el contenido utilizado durante clase explicando claramente el concepto en el siguiente [video](https://www.youtube.com/watch?v=DTOwxXnDz9U)
 También puedes aprender mas sobre este concepto en la [documentación de android sobre Broadcasts](https://developer.android.com/guide/components/broadcasts.html). 
@@ -44,6 +45,7 @@ Para lograr esto, dentro de la clase MainActivity, hay que crear un método deno
 Despues de crear un método que sea capaz de actualizar nuestra GUI ante algún evento, debemos comenzar a trabajar para crear nuestro BroadcastReceiver, y lo primero que hay que hacer es configurar un IntentFilter atento a los eventos en los que deseamos tomar acción. Para lograr esto se deberán realizar las siguientes **2 modificaciones** en la clase MainActivity 
 
 ```java
+...
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -86,12 +88,13 @@ public class MainActivity extends AppCompatActivity implements
 
 ##3. Crear un Broadcast Receiver que mande actualizar el color del ícono del plug
 
-Para lograr esto hay que crear una **inner class** denominada ChargingBroadcastReceiver dentro de la clase MainActivity, para que pueda invocar el método creado en el paso 1 cuando el IntentFilter creado en el paso 2 notifique que ha ocurrido uno de los eventos configurados.  Esta nueva clase deberá heredar de la clase BroadcastReceiver. **OJO: es una inner class la que hay que crear, y se debe colocar dentro y prácticamente al final de la clase MainActivity**
+Una vez creado y configurado el IntentFilter, ahora corresponde crear el BroadcastReceiver que lo utilice, para lograr esto hay que crear una **inner class** denominada ChargingBroadcastReceiver dentro de la clase MainActivity, para que pueda invocar el método creado en el paso 1 cuando el IntentFilter creado en el paso 2 determine que ha ocurrido uno de los eventos configurados.  Esta nueva clase deberá heredar de la clase BroadcastReceiver. **OJO: Esta nueva clase es una inner class, y se debe colocar dentro y prácticamente al final de la clase MainActivity**
 
 ```java
-
+...
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
+	...
 	...
 	...
 	...
@@ -115,9 +118,10 @@ public class MainActivity extends AppCompatActivity implements
 } //Fin de la clase MainActivity
 ```
 
-Una vez creada la **inner class** ChargingBroadcastReceiver debemos crear una variable para la misma y una instancia de manera semejante a lo que se hizo para el IntentFilter en el paso 2 de esta práctica Para llevar a cabo esto hay que actualizar nuevamente nuestra clase MainActivity realizando los siguientes **2 cambios**. 
+Una vez creada la **inner class** ***ChargingBroadcastReceiver*** debemos crear una variable y una instancia para la misma. Para llevar a cabo esto hay que actualizar nuevamente nuestra clase MainActivity realizando los siguientes **2 cambios**. 
 
 ```java
+...
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -167,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements
 Una vez que se han creado tanto el IntentFilter como el BroadcastReceiver que nos permitirán monitorear el cambio entre celular conectado y desconectado de la red eléctrica, debemos ponerlos a trabajar y esto se logra enlazandolos y registrandolos cuando la aplicación se vuelva activa (onResume), además debemos hacer lo contrario "des-registrarlos" cuando la aplicación se vuelva inactiva, creando con esto un BroadcastReceiver dinámico.  Para lograr esto hay que realizar nuevamente sobre la clase MainActivity los **2 cambios** siguientes:
 
 ```java
+...
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -227,11 +232,13 @@ public class MainActivity extends AppCompatActivity implements
 ```
 
 
-Listo, ahora puedes ejecutar y probar la aplicación, aunque deberás notar que aún tiene un pequeño **bug** que ocurre cuando conectas el cargador de corriente mientras la aplicación esta activa y lo desconectas cuando la aplicación se encuentra inactiva. Provocando que el icono del plug no se actualice correctamente.  Esto ocurre porque nuestro BroadcastReceiver es dinámico y como debes saberlo solamente trabaja cuando la aplicación esta activa.  No obstante, este problema se resolverá a continuación.  
+**Listo, ahora puedes ejecutar y probar la aplicación**, pero... deberás notar que aún tiene un pequeño **bug** que ocurre cuando conectas el cargador de corriente mientras la aplicación esta activa y lo desconectas cuando la aplicación se encuentra inactiva, provocando que el icono del plug no se actualice correctamente.  
+
+Si te detienes a analizar, esto ocurre porque nuestro BroadcastReceiver es dinámico y como debes saberlo solamente trabaja cuando la aplicación esta activa, asi que cualquier cambio que ocurra mientras la aplicación se encuentra inactiva no será contemplado.  No obstante, este problema se resolverá a continuación.  
 
 #5. Actualizar el estatus del ícono del plug cuando la aplicación vuelva a ser activa.
 
-Hay dos maneras de resolver el bug planteado en el paso anterior dependiendo de si el dispositivo tiene o no el API de nivel 23(o superior) o tiene una versión anterior.
+Hay dos maneras de resolver el bug planteado en el paso anterior dependiendo de si el dispositivo tiene o no el API de nivel 23(o superior).
 
 Si el dispositivo del usuario tiene el API nivel 23 (o superior) para obtener el estatus actual de la batería basta con utilizar el servicio de "battery manager system" de esta forma:
 
@@ -242,7 +249,7 @@ boolean isCharging = batteryManager.isCharging();
 
 Si el dispositivo del usuario no tiene API nivel 23 (o superior) el camino es un poco mas largo pues debe utilizarse un Sticky Intent (Intent Pegajoso)
 
-Antes de Android 23 era necesario usar un Sticky Intent para obtener el estatus de la bateria. Un Intent normal es lanzado como broadcast y posiblemente sea capturado por un IntentFilter para ser procesado y entonces desaparece, a diferencia de este, un Sticky Intent, no desaparece una vez que es capturado y atendido permitiendo que nuestra aplicación acceda a este en cualquier momento para obtener cualquier tipo de información que contenga.  En Android un Sticky Intent es el lugar en el que puede ser almacenado el estatus de la bateria de manera constante.
+Antes de Android 23 era necesario usar un Sticky Intents para obtener el estatus de la bateria. Un Intent normal es lanzado como broadcast y posiblemente capturado por un IntentFilter para ser procesado y entonces desaparecer, a diferencia de este, un Sticky Intent, permanece capturado y permite que nuestra aplicación acceda a este en cualquier momento para obtener cualquier tipo de información que contenga.  En Android un Sticky Intent es el lugar en el es almacenado el estatus de la bateria de manera constante.
 
 Para usar un Sticky Intent no es necesario un BroadcastReceiver, pero se utiliza codigo similar para registrarlo en la aplicación:
 
@@ -259,12 +266,11 @@ Ahora, este Sticky Intent puede ser utilizado de la siguiente manera:
 boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
 ```
 
-Puedes ver el siguiente link para obtener mayor información sobre [como controlar y monitorear el nivel de bateriay el estado de carga](https://developer.android.com/training/monitoring-device-state/battery-monitoring.html)
+Puedes ver el siguiente link para obtener mayor información sobre [como controlar y monitorear el nivel de bateria y el estatus de carga.](https://developer.android.com/training/monitoring-device-state/battery-monitoring.html)
  
 Con esta información ahora deberías ser capaz de corregir el bug presentado al final del ejercicio. Dejo a tu entendimiento el que ya debes saber donde agregar este código, pero to puede ayudar un poco indicandote que el código sería mas o menos el siguiente:
 
 ```java
-...
     @Override
     protected void onResume() {
         super.onResume();
@@ -297,7 +303,7 @@ Con esta información ahora deberías ser capaz de corregir el bug presentado al
         /** Registrar un BroadcastReceiver para monitorear el estatus de carga de batería **/
         registerReceiver(mChargingReceiver, mChargingIntentFilter);
     }
-```java
+```
 
 
 Por el momento, eso es todo amigos.
