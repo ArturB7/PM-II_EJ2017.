@@ -12,7 +12,7 @@ Obtener el código fuente base y modificarlo para:
  2. Definir el Intent Filter atento al estatus de carga del dispositivo
  3. Crear un Broadcast Receiver que mande actualizar el color del ícono del plug
  4. Registrar el Broadcast Receiver con el Intent Filter definido
- 5. Limpiar el Broadcast Receiver cuando la aplicación esté en pausa (onPause) 
+ 5. Actualizar el estatus del ícono del plug cuando la aplicación vuelva a ser activa.
  
 A continuación algo de código y su explicación para cada paso de la práctica:
 
@@ -228,6 +228,76 @@ public class MainActivity extends AppCompatActivity implements
 
 
 Listo, ahora puedes ejecutar y probar la aplicación, aunque deberás notar que aún tiene un pequeño **bug** que ocurre cuando conectas el cargador de corriente mientras la aplicación esta activa y lo desconectas cuando la aplicación se encuentra inactiva. Provocando que el icono del plug no se actualice correctamente.  Esto ocurre porque nuestro BroadcastReceiver es dinámico y como debes saberlo solamente trabaja cuando la aplicación esta activa.  No obstante, este problema se resolverá a continuación.  
+
+#5. Actualizar el estatus del ícono del plug cuando la aplicación vuelva a ser activa.
+
+Hay dos maneras de resolver el bug planteado en el paso anterior dependiendo de si el dispositivo tiene o no el API de nivel 23(o superior) o tiene una versión anterior.
+
+Si el dispositivo del usuario tiene el API nivel 23 (o superior) para obtener el estatus actual de la batería basta con utilizar el servicio de "battery manager system" de esta forma:
+
+```java
+BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+boolean isCharging = batteryManager.isCharging();
+```
+
+Si el dispositivo del usuario no tiene API nivel 23 (o superior) el camino es un poco mas largo pues debe utilizarse un Sticky Intent (Intent Pegajoso)
+
+Antes de Android 23 era necesario usar un Sticky Intent para obtener el estatus de la bateria. Un Intent normal es lanzado como broadcast y posiblemente sea capturado por un IntentFilter para ser procesado y entonces desaparece, a diferencia de este, un Sticky Intent, no desaparece una vez que es capturado y atendido permitiendo que nuestra aplicación acceda a este en cualquier momento para obtener cualquier tipo de información que contenga.  En Android un Sticky Intent es el lugar en el que puede ser almacenado el estatus de la bateria de manera constante.
+
+Para usar un Sticky Intent no es necesario un BroadcastReceiver, pero se utiliza codigo similar para registrarlo en la aplicación:
+
+```java
+IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+Intent batteryStatus = context.registerReceiver(null, ifilter);
+```
+
+Notese que también un IntentFilter es creado y configurado, y que es utilizado el método **registerReceiver** como si fuese a registrarse un BroadcastReceiver, pero en este caso el primer argumento es **nulo**.  El método **registerReceiver** devuelve un Intent, y es este nuestro Sticky Intent que tendrá la información sobre los cambios en el estatus de la batería. 
+
+Ahora, este Sticky Intent puede ser utilizado de la siguiente manera:
+
+```java
+boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
+```
+
+Puedes ver el siguiente link para obtener mayor información sobre [como controlar y monitorear el nivel de bateriay el estado de carga](https://developer.android.com/training/monitoring-device-state/battery-monitoring.html)
+ 
+Con esta información ahora deberías ser capaz de corregir el bug presentado al final del ejercicio. Dejo a tu entendimiento el que ya debes saber donde agregar este código, pero to puede ayudar un poco indicandote que el código sería mas o menos el siguiente:
+
+```java
+...
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /** Determinar el estatus actual de carga de batería **/
+        // Revisar si estamos en Android M (API 23) o posterior, si es asi...
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Obtener una instancia de BatteryManager utilizando getSystemService()
+            BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+            // Invocar el método isCharging en el BatteryManager y pasar el resultado al método 
+			// showCharging para actualizar la GUI
+            showCharging(batteryManager.isCharging());
+        } else {
+            // Si estamos en una versión anterior a Android M (API 23), entonces...
+            // Crear y registrar un IntentFilter para la acción ACTION_BATTERY_CHANGED. 
+			// Este será un Sticky Intent que contendrá mucha información sobre el estatus 
+			// de la bateria.
+            IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent currentBatteryStatusIntent = registerReceiver(null, ifilter);
+            // Obtener el valor entero de BatteryManager.EXTRA_STATUS y revisar si hace match
+            // con BatteryManager.BATTERY_STATUS_CHARGING o BatteryManager.BATTERY_STATUS_FULL. 
+			// Esto significaría que la batería esta actualmente siendo cargada.
+            int batteryStatus = currentBatteryStatusIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            boolean isCharging = (batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    batteryStatus == BatteryManager.BATTERY_STATUS_FULL);
+            // Actualizar la GUI utilizando el método showCharging.
+            showCharging(isCharging);
+        }
+
+        /** Registrar un BroadcastReceiver para monitorear el estatus de carga de batería **/
+        registerReceiver(mChargingReceiver, mChargingIntentFilter);
+    }
+```java
 
 
 Por el momento, eso es todo amigos.
