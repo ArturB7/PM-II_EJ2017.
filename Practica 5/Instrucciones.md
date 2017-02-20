@@ -1,4 +1,4 @@
-#Descripción de la práctica
+#Descripción de la práctica 5 **Tema de interés: JobServices**
 
 El propósito de esta practica es que el alumno pueda crear un JobService que complemente la aplicación de la práctica 3 para finalmente lograr ejecutar una tarea en background que constantemente le recuerde tomar agua cuando el dispositivo se encuentre cargando.
 Para crear nuestro Service Job es necesario utilizar un Job Scheduler.  
