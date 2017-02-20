@@ -1,4 +1,4 @@
-#Descripción de la práctica 1 **Tema de interés: Creación de ContentProviders**
+#Descripción de la práctica 2 **Tema de interés: Creación de ContentProviders**
 
 El propósito de esta practica es que el alumno pueda crear su propio Content Provider a partir de una aplicación básica con persistencia en base de datos.
 
