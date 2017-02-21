@@ -54,7 +54,7 @@ El código final del layout debería lucir mas o menos como el que sigue:
 
 ## 2. Cargar el ContentProvider de Contactos mediante un Content Resolver
 
-Una vez que se tenga un botón para disparar la carga de contactos, y un listado donde mostrar los mismos, lo que sigue es programar tales eventos para que esto ocurra conforme lo contemplado, para esto se editará la clase MainActivity realizando los siguientes X cambios:
+Una vez que se tenga un botón para disparar la carga de contactos, y un listado donde mostrar los mismos, lo que sigue es programar tales eventos para que esto ocurra conforme lo contemplado, para esto se editará la clase MainActivity realizando los siguientes 3 cambios:
 
 ```java
 ...
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         mCargarContactos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContactos.setText(""); //Limpiecontenido previo del TextView que mostrará el listado...
+                mContactos.setText(""); //Limpie el contenido previo del TextView que mostrará el listado...
                 int counter = 0; //Reinicie el contador que permitira saber cuantos contactos se ha recuperado...
                 ContentResolver resolver = getContentResolver(); //Obtener una instancia del ContenResolver...
                 
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 				//Iterar sobre el cursor recuperado tras la consulta para...
                 while (contactos.moveToNext())
                 {
-					//Recupearar nombre, numero telefónico y tipo de cuenta.
+					//Recuperar nombre, numero telefónico y tipo de cuenta.
                     String nombre = contactos.getString(
                             contactos.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     String numeroTel = contactos.getString(
@@ -100,13 +100,13 @@ public class MainActivity extends AppCompatActivity {
                     String tipoCuenta = contactos.getString(
                             contactos.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
 
-					//Agregarlos al TextView que muestra el listado de contenido a la vez que se incrementa el contador de contactos recuperados.
+					//Agregar estos datos al TextView que mostrará el listado de contenido, a la vez que se incrementa el contador de contactos recuperados.
                     mContactos.append(++counter + ". " +  nombre
                             + "(" + numeroTel + ")\n" + tipoCuenta + "\n\n");
                 }
                 contactos.close(); //Cerrar el cursor una vez que se ha utilizado.
 				
-				//Mostrar un mensaje indicando la cantidad de contactos recuperados.
+				//Mostrar un mensaje indicando la cantidad total de contactos recuperados.
                 Toast.makeText(getApplicationContext(),
                         counter + " telefonos recuperados",
                         Toast.LENGTH_LONG).show();
@@ -119,13 +119,13 @@ public class MainActivity extends AppCompatActivity {
 
 ## 3. Agregar los permisos para el uso del ContentProvider de contactos en el Manifest 
 
-Antes de proceder a probar el funcionamiento de la aplicacion, es necesario agregar en el Manifest de la aplicación el permiso correspondiente al uso de datos de contactos (En este caso solamente para leer datos), siendo la línea de código a agregar la siguiente:   
+Antes de proceder a probar el funcionamiento de la aplicacion, es necesario agregar en el Manifest de la aplicación el permiso correspondiente al uso de datos de contactos (en este caso solamente para leer datos), siendo la línea de código a agregar la siguiente:   
 
 ```xml
 ...
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.lenovo.ejercicio1">
 
-    <!-- Permiso para leer Contactos del dispositivo -->
+    <!-- Permiso para leer datos de Contactos del dispositivo -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
