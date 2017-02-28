@@ -27,7 +27,7 @@ A continuación algo de código y su explicación para cada paso de la práctica
 
 Para lograr obtener la GUI requerida para la aplicación, a partir del código base hay que editar el layout correspondiente al MainActivity, es decir el archivo activity_main.xml, para que incluyas un los Buttons y TextEdit requeridos.  El código a escribir es mas o menos el siguiente:
 
-![](Instrucciones_img/MainActivity_Layou.jpg?raw=true)
+![](Instrucciones_img/MainActivity_Layout.jpg?raw=true)
 
 Posteriormente, ya dentro de la clase MainActivity, deberás agregar una variable para referenciar al los elementos GUI utilizando el método **findViewById** como luce en el siguiente fragmento de código:
 
