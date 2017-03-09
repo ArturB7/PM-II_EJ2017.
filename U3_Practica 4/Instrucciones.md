@@ -1,5 +1,5 @@
 # Descripción de la Práctica 4 de la Unidad 3 (Telefonía  y redes)  (a.k.a. Práctica 11)
-**Tema de interés: Envío de correo electrónico**
+**Tema de interés: Petciones HTTP sobre Internet**
 
 El propósito de esta practica es que el alumno conozca la manera de trabajar con datos de Internet realizando una petición (request) HTTP para trabajar con los datos de respuesta desde su aplicación.  El objetivo es comenzar a desarrollar una breve aplicación que tenga la capacidad de realizar búsquedas en una base de datos de peliculas, en este caso: https://www.themoviedb.org, quienes proporcionan una API REST para el uso de sus datos mediante peticiones HTTP entregando una respuesta en formato JSON.
 
