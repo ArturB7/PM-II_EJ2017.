@@ -29,7 +29,8 @@ Si recuerdas, todas las operaciones que impliquen trafico de Internet en Android
 
 Este nombre no nos dice mucho para poder encontrar el poster de la pelicula en Internet, a no ser de que tengamos la URL base en la que residan todos los posters de las películas.  Es entonces donde la gente de **www.themoviedb** proporcionan como parte de la (documentación de su API una especificación sobre como recuperar los posters de cada película)[https://developers.themoviedb.org/3/getting-started/images], que en resumen dicta lo siguiente:
 
-- La URL base para obtener películas es: https://image.tmdb.org/t/p/[file_size] /[file_path] en donde puedes ver claramente que hacen falta dos argumentos *file_size* y *file_path*.  
+- La URL base para obtener películas es: 
+https://image.tmdb.org/t/p/[file_size]/[file_path] en donde puedes ver claramente que hacen falta dos argumentos *file_size* y *file_path*.  
 - El *file_ path* ya lo tenemos en nuestro objeto parseado.
 - Pero hay que saber los posibles valores para file_size o tamaño de la imagen.  Estos se encuentran definidos en un JSON de configuración, a saber en una URL a la que solo puedes acceder con tu API KEY, por ejemplo: https://api.themoviedb.org/3/configuration?api_key=40f11090bae0134d6cbf32392c2d9697 pero que en resumen son: "w92","w154","w185","w342","w500","w780" y "original".
 

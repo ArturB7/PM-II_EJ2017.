@@ -9,10 +9,9 @@ Obtener el código fuente base y modificarlo para:
  1. Actualizar el layout y referencias a las vistas para la MainActivity agregando un ListView
  2. Crear un layout para los Items que contendrá el ListView
  3. Incorporar GSON al proyecto mediante Gradle
- 4. Crear la inner class MovieSearchTask como una AsyncTask
- 5. Crear las clases Model que soportarán la carga de datos desde JSON a través de GSON
- 6. Crear un Adapter que nos permita popular con Items el ListView a partir del contenido del Model
- 7. Actualizar la AsyncTask denominada MovieSearchTask para unir todas las piezas.
+ 4. Crear las clases Model que soportarán la carga de datos desde JSON a través de GSON
+ 5. Crear un Adapter que nos permita popular con Items el ListView a partir del contenido del Model
+ 6. Actualizar la AsyncTask denominada MovieSearchTask para unir todas las piezas.
 
 A continuación algo de código y su explicación para cada paso de la práctica:
 
